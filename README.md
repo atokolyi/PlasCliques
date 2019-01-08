@@ -1,4 +1,4 @@
-<p align="center"><img src="misc/logo.png" alt="PlasCliques Logo" width="100%"></p>
+<p align="center"><img src="misc/logo.png" alt="PlasCliques Logo" width="70%"></p>
 PlasCliques allows the profiling and comparison of plasmid content between bacterial isolates. It does this by assessing the presence of discrete groups of plasmid genes (cliques), found to be consistantly observed together over a large diverse dataset of plasmids in Enterobacteriaceae (Tokolyi *et al*., in preparation). With the provided database, draft bacterial genomes can have their plasmid cliques profiled using the `findCliques.py` script, and their output visually compared. If the user wishes to create their own clique database, `createCliques.py` can be used.
 
 ## Install
