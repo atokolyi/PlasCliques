@@ -28,7 +28,7 @@ def get_arguments():
     req.add_argument('-d','--cdhit', help='The cd-hit cluster file (.clstr)', required=True, type=pathlib.Path)
     req.add_argument('-g','--genomes', nargs='+', help='Prokka output of genomes (.ffn)', required=True, type=pathlib.Path)
     #parser.add_argument('--out', help='COG network output file', required=True, type=pathlib.Path)
-    opt.add_argument('-j', help='Jaccard inclusion threshold for COG co-occurrence weights, default=0.9', required=False, type=float, default=0.9)
+    opt.add_argument('-j','--threshold', help='Jaccard inclusion threshold for COG co-occurrence weights, default=0.9', required=False, type=float, default=0.9)
     opt.add_argument('-p','--cpus', help='Number of parallel processes, default=1', required=False, type=int, default=1)
     opt.add_argument('-e','--exclude', help='Genes to exclude (chrom/lonely)', required=False, type=pathlib.Path)
     opt.add_argument('-a','--annot', help='Database of gene annotations and categories', required=False, type=pathlib.Path)
