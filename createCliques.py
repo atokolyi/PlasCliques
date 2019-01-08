@@ -10,6 +10,7 @@ import igraph
 import argparse
 import pathlib
 import time
+import sys
 
 # Add option to include a list of annotations
 # Or just process them straight from the fasta?
@@ -94,7 +95,7 @@ def getAnnots(annotF):
     with open (annotF,'r') as annot:
         for line in annot:
             tmp = line.split()
-            annotCat[tmp[0]] = [int(tmp[1]),tmp[2]]
+            annotCat[tmp[0]] = [int(tmp[1])," ".join(tmp[2:])]
             if int(tmp[1])>topAnnot:
                 topAnnot = int(tmp[1])
     return (annotCat,topAnnot)
@@ -123,7 +124,7 @@ def output_cliques(seqs,cl,baseGenes,cliquesOut,seqOut):
         for c in cl:
             cliqF.write(str(c[0]) + "\t" + "\t".join(c[1]) + "\n")
 
-    print("... completed in (", round(time.time()-ti,2), ") seconds",end="\n\n")
+    print("... completed in (", round(time.time()-ti,2), ") seconds")
 
     return 0
 
@@ -230,6 +231,7 @@ def create_pa(cdhit,genomes):
                     print("Error | gene not present in cd-hit clstr file: ",gene)
                     quit()
 
+    sys.stderr.flush()
     print("... completed in (", round(time.time()-ti,2), ") seconds",end="\n\n")
 
     return (pa,baseGenes,seqs)
@@ -277,6 +279,7 @@ def create_net(baseGenes,cpus,J):
         for row in subnet:
             outNet.append([baseGenes[row[0]],baseGenes[row[1]]])
 
+    sys.stderr.flush()
     print("... completed in (",round(time.time()-ti,2),") seconds",end="\n\n")
 
     return outNet

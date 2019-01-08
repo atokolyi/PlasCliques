@@ -69,7 +69,8 @@ def main():
     #    net = Parallel(n_jobs=args.cpus)(delayed(processInput)(i=p,ass=args.a[p],minCliqueSize=args.minCliqueSize,fileOut=args.bulkOut) for p in tqdm(range(len(args.a)),ncols=80))
     #else:
     #    net = Parallel(n_jobs=args.cpus)(delayed(processInput)(i=p,ass=args.a[p],minCliqueSize=args.minCliqueSize,fileOut=args.bulkOut) for p in tqdm(range(len(args.a))))
-
+    
+    # Flush cache and print output success message and total time.
 
     # Report clique output for each assembly
     output_results(net,args.outLevel,args.bulkOut,args.match,cliqAnnotID,cl_M,annotCat)
@@ -115,7 +116,7 @@ def load_dbs(seq, cliques):
         for i,line in enumerate(cliqueDBf):
 
             # if last char of gene is ')', extract info, save to annotCat, add to cliqueCat
-            tmp = line.split()
+            tmp = line.rstrip().split('\t')
 
             cat = tmp[0]
             cliqAnnotID.append(cat)
@@ -133,10 +134,11 @@ def load_dbs(seq, cliques):
                     desc = ",".join(g[1:])
                     annotCat[ve] = [cat,desc]
                     vert.append(ve)
-
+                    
                 else:
                     vert.append(v)
 
+            
             cl_M.append(set(vert))
 
     return (annotCat, cliqAnnotID, cl_M) 
@@ -197,7 +199,7 @@ def processInput(i,ass,minCliqueSize,fileOut,nucDB,match,cliqAnnotID):
     
 
     # Collect present cliques 
-    pres = [y[0].split('|')[0] for y in resX]
+    pres = [y[0] for y in resX]
     presS = set(pres)
 
 
@@ -218,7 +220,7 @@ def processInput(i,ass,minCliqueSize,fileOut,nucDB,match,cliqAnnotID):
             else:
                 if fileOut:
                     bb.append(0)
-
+    
 
     # If match, compare against matchDB, else just appnd
     # Now that we have our bbs, compare against match
