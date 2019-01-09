@@ -1,5 +1,5 @@
 <p align="center"><img src="misc/logo.png" alt="PlasCliques Logo" width="70%"></p>
-PlasCliques allows the profiling and comparison of plasmid content between bacterial isolates. It does this by assessing the presence of discrete groups of plasmid genes (cliques), found to be consistantly observed together over a large diverse dataset of plasmids in Enterobacteriaceae (Tokolyi *et al*., in preparation). With the provided database, draft bacterial genomes can have their plasmid cliques profiled using the `findCliques.py` script, and their output visually compared. If the user wishes to create their own clique database, `createCliques.py` can be used.
+PlasCliques allows the profiling and comparison of plasmid content between bacterial isolates. It does this by assessing the presence of discrete groups of plasmid genes (cliques), found to be consistantly observed together over a large diverse dataset of plasmids in Enterobacteriaceae (Tokolyi *et al*., in preparation). With the provided database, draft bacterial genomes can have their plasmid cliques profiled using the <code>findCliques.py</code> script, and their output visually compared. If the user wishes to create their own clique database, <code>createCliques.py</code> can be used.
 
 ## Install
 Download and run locally as below after ensuring the documented dependencies are installed.
@@ -31,7 +31,7 @@ Short | Long | Description (bold=required)
 -b | \--bulkOut | For matrix output, specify an output file (.grid)
 
 # Creating a custom database of cliques
-While PlasCliques comes with a database of cliques discovered in *Enterobactereaceae* plasmids, you may want to add additional plasmids, investigate a different bacterial family or perhaps have in mind an altogether different use of gene cliques (e.g. in phage, virus, human etc.). This script allows you to discover co-occurring clusters of genes (cliques) in your isolates. The output of this script is a clique database, which can then be used as input to `findCliques.py`, to discover the presence of these cliques in novel isolates. 
+While PlasCliques comes with a database of cliques discovered in *Enterobactereaceae* plasmids, you may want to add additional plasmids, investigate a different bacterial family or perhaps have in mind an altogether different use of gene cliques (e.g. in phage, virus, human etc.). This script allows you to discover co-occurring clusters of genes (cliques) in your isolates. The output of this script is a clique database, which can then be used as input to <code>findCliques.py</code>, to discover the presence of these cliques in novel isolates. 
 
 A brief overview of the clique finding process is that we extract genes from the isolate assemblies, cluster these genes them by similarity, optionally add annotations to the gene clusters, detect the presence of these clusters in the original isolates to create a presence/absence matrix and then use this to calculate co-occurrence similarities between genes. This yeilds a network from which we can extract highly co-occurring groups of genes (cliques).
 
