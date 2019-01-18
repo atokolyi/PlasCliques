@@ -69,7 +69,7 @@ def main():
         topAnnot = annot_out[1]
 
     # Calculate J network
-    net = create_net(baseGenes,args.cpus,args.j)
+    net = create_net(baseGenes,args.cpus,args.threshold)
 
 
     
