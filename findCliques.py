@@ -273,57 +273,54 @@ def output_results(net,outLevel,fileOut,match,cliqAnnotID,cl_M,annotCat):
                 els = "\t".join(els)
                 raw.write(els)
                 raw.write("\n")
+
+    if match:
+        for subnet in net:
+            print(BOLD + subnet[0].split('/')[-1] + END)
+            print(BOLD + "Score\tB+S\t%Found\tPlasmidID" + END)
+            for r in [r for r in subnet[1] if r[2]>30]:
+                print(r[0],r[1],sep="\t",end="\t")
+                COLOUR = RED
+                if r[2]>30: COLOUR = ORANGE
+                if r[2]>50: COLOUR = GREEN
+                print(COLOUR + str(r[2]) + END,end="\t")
+                print(r[3])
+            print(BOLD + "Predicted plasmids: " + END,len([r for r in subnet[1] if r[2]>50]),end="\n\n")
     else:
-        # Outlevel, 1,2,3,4
-        outStats = [0]*18
 
-        if match:
-            for subnet in net:
-                print(BOLD + subnet[0].split('/')[-1] + END)
-                print(BOLD + "Score\tB+S\t%Found\tPlasmidID" + END)
-                for r in [r for r in subnet[1] if r[2]>30]:
-                    print(r[0],r[1],sep="\t",end="\t")
-                    COLOUR = RED
-                    if r[2]>30: COLOUR = ORANGE
-                    if r[2]>50: COLOUR = GREEN
-                    print(COLOUR + str(r[2]) + END,end="\t")
-                    print(r[3])
-                print(BOLD + "Predicted plasmids: " + END,len([r for r in subnet[1] if r[2]>50]),end="\n\n")
-        else:
+        for subnet in net:
 
-            for subnet in net:
+            isolate = subnet[0].replace('#','_')
+            bbs = list(map(str,subnet[1]))
 
-                isolate = subnet[0].replace('#','_')
-                bbs = list(map(str,subnet[1]))
-
-                if outLevel==0:
-                    print(isolate,end="\t")
-                    print(",".join(bbs))
-                if outLevel==1:
-                    print(isolate,end="\t")
-                    for i in range(len(bbs)):
-                        bbs[i] = bbs[i] + "(" + cliqAnnotID[int(bbs[i])] + ")"
-                    print(",".join(bbs))
-                if outLevel==2:
-                    print(isolate,end="\t")
-                    for i in range(len(bbs)):
-                        bb = int(bbs[i])
-                        cat = cliqAnnotID[bb]
-                        print("\t",cat,"\t",bb,end="\t",sep="")
-                        for ve in cl_M[bb]:
-                            if ve in annotCat:
-                                print(annotCat[ve][1],end="; ")
-                        print()
-                if outLevel==3:
-                    print(isolate)
-                    for bb in bbs:
-                        print("\t",cliqAnnotID[int(bb)],"\t",bb,sep="",end="\n")
-                        for ve in cl_M[int(bb)]:
-                            if ve in annotCat:
-                                print("\t",annotCat[ve][0],ve,annotCat[ve][1],sep="\t")
-                            else:
-                                print("\t",1,ve,'-',sep="\t")
-                        print()
+            if outLevel==0:
+                print(isolate,end="\t")
+                print(",".join(bbs))
+            if outLevel==1:
+                print(isolate,end="\t")
+                for i in range(len(bbs)):
+                    bbs[i] = bbs[i] + "(" + cliqAnnotID[int(bbs[i])] + ")"
+                print(",".join(bbs))
+            if outLevel==2:
+                print(isolate,end="\t")
+                for i in range(len(bbs)):
+                    bb = int(bbs[i])
+                    cat = cliqAnnotID[bb]
+                    print("\t",cat,"\t",bb,end="\t",sep="")
+                    for ve in cl_M[bb]:
+                        if ve in annotCat:
+                            print(annotCat[ve][1],end="; ")
+                    print()
+            if outLevel==3:
+                print(isolate)
+                for bb in bbs:
+                    print("\t",cliqAnnotID[int(bb)],"\t",bb,sep="",end="\n")
+                    for ve in cl_M[int(bb)]:
+                        if ve in annotCat:
+                            print("\t",annotCat[ve][0],ve,annotCat[ve][1],sep="\t")
+                        else:
+                            print("\t",1,ve,'-',sep="\t")
+                    print()
 
 
 if __name__ == '__main__':

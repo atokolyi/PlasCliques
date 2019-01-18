@@ -15,7 +15,13 @@ This will output a list of plasmid cliques in each isolate, and a clustered visu
 ```bash
 ./findCliques.py -a assemblies_*.fasta -n Entero.fasta -c Entero.cliques
 ```
-
+## Heatmap visualisation
+Using the grid output option allows us to export a matrix of the cliques present in each isolate, which can then be used to create a summary visualisation (.html) of the output.
+```bash
+./findCliques.py -a assemblies_*.fasta -n Entero.fasta -c Entero.cliques -b pc_out.grid
+Rscript misc/makeHeatmap.R pc_out.grid
+```
+<p align="left"><img src="misc/heatmap.png" alt="PlasCliques Logo" width="70%"></p>
 
 ## Command line options
 Short | Long | Description (bold=required)
