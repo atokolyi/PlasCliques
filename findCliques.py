@@ -26,8 +26,7 @@ def get_arguments():
 
     req.add_argument('-a','--assemblies', help='Bacterial isolate assembly/ies (.fasta)', nargs='+', required=True, type=pathlib.Path)
 
-    req.add_argument('-n','--nucDB', help='Nucleotide sequences of clique genes (.fasta)', required=True, type=pathlib.Path)
-    req.add_argument('-c','--cliquesDB', help='Database of cliques and their genes (.cliques)', required=True, type=pathlib.Path)
+    req.add_argument('-c','--cliquesDB', help='Folder with clique database (CLDB)', required=True, type=pathlib.Path)
 
     opt.add_argument('-s','--minCliqueSize', help='Minimum size (integer) of cliques included, default=2', required=False, type=int, default=2)
 
@@ -49,9 +48,12 @@ def main():
 
     # Load the arguments
     args = get_arguments()
+
+    nucDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.fa'
+    cliquesDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.cl'
     
     # Load the DBs of cliques and sequences
-    db_out = load_dbs(args.nucDB, args.cliquesDB)
+    db_out = load_dbs(cliquesDB)
     annotCat = db_out[0]
     cliqAnnotID = db_out[1]
     cl_M = db_out[2]
@@ -62,7 +64,7 @@ def main():
     
 
     # Scan for cliques in each assembly (parallel)
-    net = Parallel(n_jobs=args.cpus)(delayed(processInput)(i=p,ass=args.assemblies[p],minCliqueSize=args.minCliqueSize,fileOut=args.bulkOut,nucDB=args.nucDB,match=args.match,cliqAnnotID=cliqAnnotID) for p in tqdm(range(len(args.assemblies)),ncols=80))
+    net = Parallel(n_jobs=args.cpus)(delayed(processInput)(i=p,ass=args.assemblies[p],minCliqueSize=args.minCliqueSize,fileOut=args.bulkOut,nucDB=nucDB,match=args.match,cliqAnnotID=cliqAnnotID) for p in tqdm(range(len(args.assemblies)),ncols=80))
 
     #if args.bulkOut:
         # Process input   ,p,args.assembly[i],
@@ -95,7 +97,7 @@ def load_match(match):
 ## As currently including excluded and clique genes
 ## Just making IDs larger than they need to be
 
-def load_dbs(seq, cliques):
+def load_dbs(seq,cliques):
 
     # For each clique, store clique ID > ID+desc of constituent genes
     # To then print as int in heatmap and in colname for mouse over clique
@@ -111,6 +113,7 @@ def load_dbs(seq, cliques):
     # Load clique DBs
     cliqAnnotID = [] # Annotation category of cliques, remove??
     cl_M = [] # List of backbones IDs to genes which are in
+
 
     with open(cliques,'r') as cliqueDBf:
         for i,line in enumerate(cliqueDBf):

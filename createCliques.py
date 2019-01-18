@@ -11,6 +11,7 @@ import argparse
 import pathlib
 import time
 import sys
+import os
 
 # Add option to include a list of annotations
 # Or just process them straight from the fasta?
@@ -34,8 +35,7 @@ def get_arguments():
     opt.add_argument('-a','--annot', help='Database of gene annotations and categories', required=False, type=pathlib.Path)
 
     # Output
-    req.add_argument('-c','--cliquesDB', help='Output database of cliques discoveredi (.cliques)', required=True, type=pathlib.Path)
-    req.add_argument('-n','--nucDB', help='Output fasta file of the sequences present in the final cliques (.fasta)', required=True, type=pathlib.Path)
+    req.add_argument('-c','--cliquesDB', help='Output folder for database of discovered cliques', required=True, type=pathlib.Path)
     
     parser._action_groups.append(opt)
     args = parser.parse_args()
@@ -83,8 +83,13 @@ def main():
     # Discover cliques
     cl = create_cliques(net, baseGenes, annotCat, topAnnot)
 
+    if not args.cliquesDB.exists:
+        os.mkdir(args.cliquesDB)
+    nucDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.fa'
+    cliquesDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.fa'
+
     # Ouptut cliqueDB and seqDB
-    output_cliques(seqs,cl,baseGenes,args.cliquesDB,args.nucDB)
+    output_cliques(seqs,cl,baseGenes,cliquesDB,nucDB)
 
     return 0
 
