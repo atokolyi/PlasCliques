@@ -83,7 +83,7 @@ def main():
     # Discover cliques
     cl = create_cliques(net, baseGenes, annotCat, topAnnot)
 
-    if not args.cliquesDB.exists:
+    if not os.path.exists(cliquesDB):
         os.mkdir(args.cliquesDB)
 
     CDB = str(args.cliquesDB)
