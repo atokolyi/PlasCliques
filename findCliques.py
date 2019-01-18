@@ -50,7 +50,7 @@ def main():
     args = get_arguments()
 
     nucDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.fa'
-    cliquesDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.cl'
+    cliquesDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.cliques'
     
     # Load the DBs of cliques and sequences
     db_out = load_dbs(cliquesDB)

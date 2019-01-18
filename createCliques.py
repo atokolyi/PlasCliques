@@ -86,7 +86,7 @@ def main():
     if not args.cliquesDB.exists:
         os.mkdir(args.cliquesDB)
     nucDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.fa'
-    cliquesDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.fa'
+    cliquesDB = args.cliquesDB + '/' + str(args.cliquesDB)[-1] + '.cliques'
 
     # Ouptut cliqueDB and seqDB
     output_cliques(seqs,cl,baseGenes,cliquesDB,nucDB)
