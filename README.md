@@ -13,12 +13,12 @@ This script allows the discovery of plasmid cliques in bacterial assemblies. For
 ## Quick usage
 This will output a list of plasmid cliques in each isolate, and a clustered visualisation of these profiles.
 ```bash
-./findCliques.py -a assemblies_*.fasta -n Entero.fasta -c Entero.cliques
+./findCliques.py -c EnteroCLDB -a assemblies_*.fasta
 ```
 ## Heatmap visualisation
 Using the grid output option allows us to export a matrix of the cliques present in each isolate, which can then be used to create a summary visualisation (.html) of the output.
 ```bash
-./findCliques.py -a assemblies_*.fasta -n Entero.fasta -c Entero.cliques -b pc_out.grid
+./findCliques.py -c EnteroCLDB -a assemblies_*.fasta -b pc_out.grid
 Rscript misc/makeHeatmap.R pc_out.grid
 ```
 <p align="left"><img src="misc/heatmap.png" alt="Summary heatmap visualisation" width="70%"></p>
@@ -29,8 +29,7 @@ Short | Long | Description (bold=required)
 -v | \--version | Print version number and exit
 -h | \--help | Print command line options and exit
 -a | \--assemblies | **Assembled bacterial contigs as input (.fasta)**
--n | \--nucDB | **Nucleotide sequences of clique genes (.fasta)**
--c | \--cliquesDB | **Database of cliques and their genes (.cliques)**
+-c | \--cliquesDB | **Folder containing database of cliques**
 -s | \--minCliqueSize | Minimum size (integer) of cliques included, default=2
 -m | \--match | Match file to match isolate backbones against a DB of large plasmids (.match)
 -l | \--outLevel | Integer level of output verbosity, 0: Cliques (default), 1: Previous + categories, 2: Previous + genes in cliques, 3: Previous + gene descriptions
@@ -42,9 +41,9 @@ While PlasCliques comes with a database of cliques discovered in *Enterobacterea
 A brief overview of the clique finding process is that we extract genes from the isolate assemblies, cluster these genes them by similarity, optionally add annotations to the gene clusters, detect the presence of these clusters in the original isolates to create a presence/absence matrix and then use this to calculate co-occurrence similarities between genes. This yeilds a network from which we can extract highly co-occurring groups of genes (cliques).
 
 ## Quick usage
-This will create a database of cliques (Entero.cliques) and clique genes (Entero.fasta) based on the co-occurrence of the clustered genes (gene_clusters.clstr) in the investigated genomes (genomes_*.ffn).
+This will create folder containing a clique database (EnteroCLDB) based on the co-occurrence of the clustered genes (gene_clusters.clstr) in the investigated genomes (genomes_*.ffn).
 ```bash
-./createCliques.py -g genomes_*.ffn -d gene_clusters.clstr -n Entero.fasta -c Entero.cliques
+./createCliques.py -g genomes_*.ffn -d gene_clusters.clstr -c EnteroCLDB
 ```
 
 ## Command line options
@@ -54,8 +53,7 @@ Short | Long | Description (bold=required)
 -h | \--help | Print command line options and exit
 -d | \--cdhit | **The cd-hit cluster file (.clstr)**
 -g | \--genome | **Prokka output of genomes (.ffn)**
--c | \--cliquesDB | **Output database of cliques discoveredi (.cliques)**
--n | \--nucDB | **Output fasta file of the sequences present in the final cliques (.fasta)**
+-c | \--cliquesDB | **Output folder containing database of discovered cliques**
 -j | \--threshold | Jaccard inclusion threshold for COG co-occurrence weights, default=0.9
 -p | \--cpus | Number of parallel processes, default=1
 -a | \--annot | Database of gene annotations and categories <br> (format: gene**\t**categoryID**\t**description**\n**)
