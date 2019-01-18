@@ -114,7 +114,7 @@ def getAnnots(annotF):
 
 def output_cliques(seqs,cl,baseGenes,cliquesOut,seqOut):
 
-    print("Writing cliques and their sequences...")
+    print("Writing cliques and their sequences...",file=sys.stderr)
     ti = time.time()
 
     bgs = set(baseGenes)
@@ -131,14 +131,14 @@ def output_cliques(seqs,cl,baseGenes,cliquesOut,seqOut):
         for c in cl:
             cliqF.write(str(c[0]) + "\t" + "\t".join(c[1]) + "\n")
 
-    print("... completed in (", round(time.time()-ti,2), ") seconds")
+    print("... completed in (", round(time.time()-ti,2), ") seconds",file=sys.stderr)
 
     return 0
 
 
 def create_cliques(net, baseGenes, annotCat, topAnnot):
 
-    print("Discovering cliques...")
+    print("Discovering cliques...",file=sys.stderr)
     ti = time.time()
 
     graph = igraph.Graph()
@@ -170,7 +170,7 @@ def create_cliques(net, baseGenes, annotCat, topAnnot):
 
         cl.append([mostAnnot,vert])#,mostAnnot]
 
-    print("... completed in (", round(time.time()-ti,2), ") seconds",end="\n\n")
+    print("... completed in (", round(time.time()-ti,2), ") seconds",end="\n\n",file=sys.stderr)
 
     return cl
 
@@ -189,7 +189,7 @@ def exclude_genes(pa,baseGenes,exclF):
 
 def create_pa(cdhit,genomes):
 
-    print("Creating presence/absence matrix...")
+    print("Creating presence/absence matrix...",file=sys.stderr)
     ti = time.time()
 
     baseGenes = []
@@ -235,11 +235,11 @@ def create_pa(cdhit,genomes):
                     pa[bGid[repGene[record.id]]].add(i)
                     seqs.append([record.id,record.seq])
                 else:
-                    print("Error | gene not present in cd-hit clstr file: ",gene)
+                    print("Error | gene not present in cd-hit clstr file: ",gene,file=sys.stderr)
                     quit()
 
     sys.stderr.flush()
-    print("... completed in (", round(time.time()-ti,2), ") seconds",end="\n\n")
+    print("... completed in (", round(time.time()-ti,2), ") seconds",end="\n\n",file=sys.stderr)
 
     return (pa,baseGenes,seqs)
 
@@ -262,7 +262,7 @@ def calculate_j(i,J):
 def create_net(baseGenes,cpus,J):
     global pa
     
-    print("Creating co-occurrence network...")
+    print("Creating co-occurrence network...",file=sys.stderr)
     ti = time.time()
 
     lbj = len(baseGenes)
@@ -287,7 +287,7 @@ def create_net(baseGenes,cpus,J):
             outNet.append([baseGenes[row[0]],baseGenes[row[1]]])
 
     sys.stderr.flush()
-    print("... completed in (",round(time.time()-ti,2),") seconds",end="\n\n")
+    print("... completed in (",round(time.time()-ti,2),") seconds",end="\n\n",file=sys.stderr)
 
     return outNet
 

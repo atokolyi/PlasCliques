@@ -12,6 +12,7 @@ import pathlib
 import os
 import tempfile
 import copy
+import time
 
 
 def get_arguments():
@@ -64,7 +65,10 @@ def main():
     
 
     # Scan for cliques in each assembly (parallel)
+    print("Discovering present cliques...",file=sys.stderr)
+    ti = time.time()
     net = Parallel(n_jobs=args.cpus)(delayed(processInput)(i=p,ass=args.assemblies[p],minCliqueSize=args.minCliqueSize,fileOut=args.bulkOut,nucDB=nucDB,match=args.match,cliqAnnotID=cliqAnnotID) for p in tqdm(range(len(args.assemblies)),ncols=80))
+    print("... completed in (", round(time.time()-ti,2), ") seconds",file=sys.stderr)
 
     #if args.bulkOut:
         # Process input   ,p,args.assembly[i],
