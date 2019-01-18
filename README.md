@@ -21,7 +21,7 @@ Using the grid output option allows us to export a matrix of the cliques present
 ./findCliques.py -a assemblies_*.fasta -n Entero.fasta -c Entero.cliques -b pc_out.grid
 Rscript misc/makeHeatmap.R pc_out.grid
 ```
-<p align="left"><img src="misc/heatmap.png" alt="Summary heatmap visualisation" width="70%"></p>
+<p align="left">![Summary heatmap visualisation](misc/heatmap.png)</p>
 
 ## Command line options
 Short | Long | Description (bold=required)
