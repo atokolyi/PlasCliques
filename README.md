@@ -1,4 +1,4 @@
-<p align="center"><img src="misc/logo.png" alt="PlasCliques Logo" width="70%"></p>
+<p align="center"><img src="misc/logo.png" alt="PlasCliques logo" width="70%"></p>
 PlasCliques allows the profiling and comparison of plasmid content between bacterial isolates. It does this by assessing the presence of discrete groups of plasmid genes (cliques), found to be consistantly observed together over a large diverse dataset of plasmids in Enterobacteriaceae (Tokolyi *et al*., in preparation). With the provided database, draft bacterial genomes can have their plasmid cliques profiled using the <code>findCliques.py</code> script, and their output visually compared. If the user wishes to create their own clique database, <code>createCliques.py</code> can be used.
 
 ## Install
@@ -21,7 +21,7 @@ Using the grid output option allows us to export a matrix of the cliques present
 ./findCliques.py -a assemblies_*.fasta -n Entero.fasta -c Entero.cliques -b pc_out.grid
 Rscript misc/makeHeatmap.R pc_out.grid
 ```
-<p align="left"><img src="misc/heatmap.png" alt="PlasCliques Logo" width="70%"></p>
+<p align="left"><img src="misc/heatmap.png" alt="Summary heatmap visualisation" width="70%"></p>
 
 ## Command line options
 Short | Long | Description (bold=required)
