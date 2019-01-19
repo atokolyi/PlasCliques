@@ -101,7 +101,7 @@ def load_match(match):
 ## As currently including excluded and clique genes
 ## Just making IDs larger than they need to be
 
-def load_dbs(seq,cliques):
+def load_dbs(cliques):
 
     # For each clique, store clique ID > ID+desc of constituent genes
     # To then print as int in heatmap and in colname for mouse over clique
