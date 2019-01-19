@@ -11,7 +11,7 @@ git clone https://github.com/atokolyi/PlasCliques.git
 # Discovering plasmid cliques in bacterial isolates
 This script allows the discovery of plasmid cliques in bacterial assemblies. For *Enterobacteriaceae*, the provided database can be used as input, otherwise a custom clique database can be created using the scripts in the next section.
 ## Quick usage
-This will output a list of plasmid cliques in each isolate, and a clustered visualisation of these profiles.
+This will output a list of plasmid cliques in each isolate.
 ```bash
 ./findCliques.py -c EnteroCLDB -a assemblies_*.fasta
 ```

@@ -61,6 +61,7 @@ def main():
     cl_M = db_out[2]
     
     # If matching, load the DB of matches
+    matchDB = None
     if args.match:
         matchDB = load_match(args.match)
     
