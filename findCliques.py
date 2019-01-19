@@ -10,6 +10,7 @@ import multiprocessing
 import argparse
 import pathlib
 import os
+import sys
 import tempfile
 import copy
 import time
@@ -50,8 +51,8 @@ def main():
     # Load the arguments
     args = get_arguments()
 
-    nucDB = str(args.cliquesDB) + '/' + str(args.cliquesDB)[-1] + '.fa'
-    cliquesDB = str(args.cliquesDB) + '/' + str(args.cliquesDB)[-1] + '.cliques'
+    nucDB = str(args.cliquesDB) + '/' + str(args.cliquesDB).split('/')[-1] + '.fa'
+    cliquesDB = str(args.cliquesDB) + '/' + str(args.cliquesDB).split('/')[-1] + '.cliques'
     
     # Load the DBs of cliques and sequences
     db_out = load_dbs(cliquesDB)
@@ -63,11 +64,10 @@ def main():
     if args.match:
         matchDB = load_match(args.match)
     
-
     # Scan for cliques in each assembly (parallel)
     print("Discovering present cliques...",file=sys.stderr)
     ti = time.time()
-    net = Parallel(n_jobs=args.cpus)(delayed(processInput)(i=p,ass=args.assemblies[p],minCliqueSize=args.minCliqueSize,fileOut=args.bulkOut,nucDB=nucDB,match=args.match,cliqAnnotID=cliqAnnotID) for p in tqdm(range(len(args.assemblies)),ncols=80))
+    net = Parallel(n_jobs=args.cpus)(delayed(processInput)(i=p,ass=args.assemblies[p],minCliqueSize=args.minCliqueSize,fileOut=args.bulkOut,nucDB=nucDB,match=matchDB,cliqAnnotID=cliqAnnotID) for p in tqdm(range(len(args.assemblies)),ncols=80))
     print("... completed in (", round(time.time()-ti,2), ") seconds",file=sys.stderr)
 
     #if args.bulkOut:
@@ -235,7 +235,7 @@ def processInput(i,ass,minCliqueSize,fileOut,nucDB,match,cliqAnnotID):
         results = []
         while len(bb)>0:
             most = [-1]*5
-            for a,aP in enumerate(matchDB):
+            for a,aP in enumerate(match):
                 saP = set(aP[1])
                 fAbs = sum(el in bb for el in aP[1])
                 ratio = fAbs/len(aP[1])
@@ -248,7 +248,7 @@ def processInput(i,ass,minCliqueSize,fileOut,nucDB,match,cliqAnnotID):
             if most[1]==0:
                 break
             results.append([round(most[1],2),most[2],round(most[3]*100,2),most[0]])
-            for el in matchDB[most[4]][1]:
+            for el in match[most[4]][1]:
                 if el in bb: bb.remove(el)
         results = sorted(results,key=lambda l:l[2], reverse=True)
         subnet = [str(ass),results]
@@ -271,16 +271,7 @@ def output_results(net,outLevel,fileOut,match,cliqAnnotID,cl_M,annotCat):
     BOLD = '\033[1m'
     END = '\033[0m'
 
-    if fileOut:
-        with open(fileOut, 'w') as raw:
-            for subnet in net: # For each isolate in the input
-                raw.write(subnet[0].replace('#','_') + "\t")
-                els = list(map(str,subnet[1]))
-                #els = "\n".join(els)
-                els = "\t".join(els)
-                raw.write(els)
-                raw.write("\n")
-
+    # Match output
     if match:
         for subnet in net:
             print(BOLD + subnet[0].split('/')[-1] + END)
@@ -295,39 +286,52 @@ def output_results(net,outLevel,fileOut,match,cliqAnnotID,cl_M,annotCat):
             print(BOLD + "Predicted plasmids: " + END,len([r for r in subnet[1] if r[2]>50]),end="\n\n")
     else:
 
-        for subnet in net:
+        # Grid output
+        if fileOut:
+            with open(fileOut, 'w') as raw:
+                for subnet in net: # For each isolate in the input
+                    raw.write(subnet[0].replace('#','_') + "\t")
+                    els = list(map(str,subnet[1]))
+                    #els = "\n".join(els)
+                    els = "\t".join(els)
+                    raw.write(els)
+                    raw.write("\n")
 
-            isolate = subnet[0].replace('#','_')
-            bbs = list(map(str,subnet[1]))
+        # Terminal output
+        else:
+            for subnet in net:
 
-            if outLevel==0:
-                print(isolate,end="\t")
-                print(",".join(bbs))
-            if outLevel==1:
-                print(isolate,end="\t")
-                for i in range(len(bbs)):
-                    bbs[i] = bbs[i] + "(" + cliqAnnotID[int(bbs[i])] + ")"
-                print(",".join(bbs))
-            if outLevel==2:
-                print(isolate,end="\t")
-                for i in range(len(bbs)):
-                    bb = int(bbs[i])
-                    cat = cliqAnnotID[bb]
-                    print("\t",cat,"\t",bb,end="\t",sep="")
-                    for ve in cl_M[bb]:
-                        if ve in annotCat:
-                            print(annotCat[ve][1],end="; ")
-                    print()
-            if outLevel==3:
-                print(isolate)
-                for bb in bbs:
-                    print("\t",cliqAnnotID[int(bb)],"\t",bb,sep="",end="\n")
-                    for ve in cl_M[int(bb)]:
-                        if ve in annotCat:
-                            print("\t",annotCat[ve][0],ve,annotCat[ve][1],sep="\t")
-                        else:
-                            print("\t",1,ve,'-',sep="\t")
-                    print()
+                isolate = subnet[0].replace('#','_')
+                bbs = list(map(str,subnet[1]))
+
+                if outLevel==0:
+                    print(isolate,end="\t")
+                    print(",".join(bbs))
+                if outLevel==1:
+                    print(isolate,end="\t")
+                    for i in range(len(bbs)):
+                        bbs[i] = bbs[i] + "(" + cliqAnnotID[int(bbs[i])] + ")"
+                    print(",".join(bbs))
+                if outLevel==2:
+                    print(isolate,end="\t")
+                    for i in range(len(bbs)):
+                        bb = int(bbs[i])
+                        cat = cliqAnnotID[bb]
+                        print("\t",cat,"\t",bb,end="\t",sep="")
+                        for ve in cl_M[bb]:
+                            if ve in annotCat:
+                                print(annotCat[ve][1],end="; ")
+                        print()
+                if outLevel==3:
+                    print(isolate)
+                    for bb in bbs:
+                        print("\t",cliqAnnotID[int(bb)],"\t",bb,sep="",end="\n")
+                        for ve in cl_M[int(bb)]:
+                            if ve in annotCat:
+                                print("\t",annotCat[ve][0],ve,annotCat[ve][1],sep="\t")
+                            else:
+                                print("\t",1,ve,'-',sep="\t")
+                        print()
 
 
 if __name__ == '__main__':
